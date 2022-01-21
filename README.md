@@ -26,4 +26,11 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
-<img width="923" alt="image" src="https://user-images.githubusercontent.com/33195239/150517400-e0e106ce-b247-47a6-9fa8-ded0dfab6871.png">
+## Application started
+
+Here is what the application looks like. Click the button to have the weather recap for 10 others cities generated randomly. 
+
+<img width="928" alt="image" src="https://user-images.githubusercontent.com/33195239/150518209-47fda473-2277-4feb-9c0f-33122fe4666f.png">
+
+Each time you click the button or refresh the page ten others cites are selected for weather recap.
+<img width="923" alt="image" src="https://user-images.githubusercontent.com/33195239/150518276-0b359543-a298-4da6-8660-fb5cff10281c.png">
