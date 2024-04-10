@@ -9,7 +9,7 @@ pipeline {
       steps {
         echo 'Building..'
          
-         git branch: 'main', url: 'https://github.com/ramataba/Test2.git'
+         git branch: 'master', url: 'https://github.com/ramataba/Test2.git'
               script {
                   def pom = readMavenPom file: 'POM.xml'
                   version = pom.version
