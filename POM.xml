@@ -1,73 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.Test2</groupId>
-  <artifactId>simple-servlet</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
+    <groupId>de.girino</groupId>
+    <artifactId>maven-typescript-example</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <name>simple-servlet</name>
-  <url>http://maven.apache.org</url>
+    <description>
+        An example for bringing up a Java based webapp project with TypeScript
+    </description>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-	<maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
+    <scm>
+        <url>https://github.com/pkaul/maven-typescript-example</url>
+        <connection>scm:git:git@github.com:pkaul/maven-typescript-example.git</connection>
+        <developerConnection>scm:git:git@github.com:pkaul/maven-typescript-example.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
-  <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <id>jboss-enterprise-maven-repository</id>
-            <name>JBoss Enterprise Maven Repository</name>
-            <url>https://maven.repository.redhat.com/ga/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.jboss.spec.javax.servlet</groupId>
-    	<artifactId>jboss-servlet-api_3.0_spec</artifactId>
-    	<version>1.0.2.Final-redhat-2</version>
-    </dependency>
-  </dependencies>
-  
-  <build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.0.0</version>
-			</plugin>
-		</plugins>
-	</build>
-	
+    <modules>
+        <module>example-library-js</module>
+        <module>example-webapp</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.Test2</groupId>
+                    <artifactId>jszip-maven-plugin</artifactId>
+                    <version>0.1-alpha-9</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
 </project>
