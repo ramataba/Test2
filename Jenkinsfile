@@ -7,7 +7,6 @@ pipeline {
         checkout scm
       }
     }
-      }
     stage('Package') {
       steps {
         // Package the TypeScript build artifacts into a JAR file
@@ -35,3 +34,4 @@ pipeline {
       }
     }
   }
+}
