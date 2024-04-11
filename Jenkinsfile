@@ -1,66 +1,45 @@
 pipeline {
-
-  agent {
-    label 'maven'
-  }
+  agent any
 
   stages {
-    stage('Build') {
+    stage('Checkout') {
       steps {
-        echo 'Building..'
-         
-         git branch: 'master', url: 'https://github.com/ramataba/Test2.git'
-              script {
-                  def pom = readMavenPom file: 'POM.xml'
-                  version = pom.version
-              }
-
-        sh 'mvn clean package'
-        
+        checkout scm
       }
     }
-    stage('Create Container Image') {
+    stage('Build') {
       steps {
-        echo 'Create Container Image..'
-        
         script {
-          openshift.withCluster() {
-            openshift.withProject("patrick-pereira-dev") {
-                def buildConfigExists = openshift.selector("bc", "meteo10Villes").exists()
+          // Install npm dependencies
+          sh 'npm install'
 
-                if(!buildConfigExists){
-                    openshift.newBuild("--name=meteo10Villes", "--docker-image=registry.redhat.io/jboss-eap-7/eap74-openjdk8-openshift-rhel7", "--binary")
-                }
-
-                openshift.selector("bc", "meteo10Villes").startBuild("--from-file=target/simple-servlet-0.0.1-SNAPSHOT.war", "--follow")
-
-            }
-
-          }
+          // Build TypeScript code
+          sh 'npm run build'
         }
+      }
+    }
+    stage('Package') {
+      steps {
+        // Package the TypeScript build artifacts into a JAR file
+        sh 'mvn package'
       }
     }
     stage('Deploy') {
       steps {
-        echo 'Deploying....'
         script {
           openshift.withCluster() {
             openshift.withProject("patrick-pereira-dev") {
+              // Check if the deployment config exists
+              def deploymentConfigExists = openshift.selector("dc", "meteo10Villes").exists()
 
-              def deployment = openshift.selector("dc", "meteo10Villes")
-
-              if(!deployment.exists()){
-                openshift.newApp('meteo10Villes', "--as-deployment-config").narrow('svc').expose()
+              // If deployment config doesn't exist, create a new one
+              if(!deploymentConfigExists){
+                openshift.newApp('meteo10Villes').narrow('svc').expose()
               }
 
-              timeout(5) { 
-                openshift.selector("dc", "meteo10Villes").related('pods').untilEach(1) {
-                  return (it.object().status.phase == "Running")
-                  }
-                }
-
+              // Start a new build using the Maven JAR artifact
+              openshift.selector("bc", "meteo10Villes").startBuild("--from-file=target/your-artifact.jar", "--follow")
             }
-
           }
         }
       }
