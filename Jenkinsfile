@@ -7,15 +7,6 @@ pipeline {
         checkout scm
       }
     }
-    stage('Build') {
-      steps {
-        script {
-          // Install npm dependencies
-          sh 'npm install'
-
-          // Build TypeScript code
-          sh 'npm run build'
-        }
       }
     }
     stage('Package') {
