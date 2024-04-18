@@ -1,34 +1,62 @@
+#! /usr/bin/env groovy
+
 pipeline {
-  agent any
+
+  agent {
+    label 'maven'
+  }
 
   stages {
-    stage('Checkout') {
+    stage('Build') {
       steps {
-        checkout scm
+        echo 'Building..'
+
+        sh 'mvn clean package'
+        
       }
     }
-    stage('Package') {
+    stage('Create Container Image') {
       steps {
-        // Package the TypeScript build artifacts into a JAR file
-        sh 'mvn package'
+        echo 'Create Container Image..'
+        
+        script {
+          openshift.withCluster() {
+            openshift.withProject("patrick-pereira-dev") {
+                def buildConfigExists = openshift.selector("bc", "meteo").exists()
+
+                if(!buildConfigExists){
+                    openshift.newBuild("--name=meteo", "--docker-image=registry.redhat.io/jboss-eap-7/eap74-openjdk8-openshift-rhel7", "--binary")
+                }
+
+                openshift.selector("bc", "meteo").startBuild("--from-file=target/simple-servlet-0.0.1-SNAPSHOT.war", "--follow")
+
+            }
+
+          }
+        }
       }
     }
     stage('Deploy') {
       steps {
+        echo 'Deploying....'
         script {
           openshift.withCluster() {
             openshift.withProject("patrick-pereira-dev") {
-              // Check if the deployment config exists
-              def deploymentConfigExists = openshift.selector("dc", "meteo10Villes").exists()
 
-              // If deployment config doesn't exist, create a new one
-              if(!deploymentConfigExists){
-                openshift.newApp('meteo10Villes').narrow('svc').expose()
+              def deployment = openshift.selector("dc", "meteo")
+
+              if(!deployment.exists()){
+                openshift.newApp('meteo', "--as-deployment-config").narrow('svc').expose()
               }
 
-              // Start a new build using the Maven JAR artifact
-              openshift.selector("bc", "meteo10Villes").startBuild("--from-file=target/your-artifact.jar", "--follow")
+              timeout(20) { 
+                openshift.selector("dc", "meteo").related('pods').untilEach(1) {
+                  return (it.object().status.phase == "Running")
+                  }
+                }
+
             }
+
           }
         }
       }
