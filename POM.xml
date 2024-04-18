@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.meteo</groupId>
-  <artifactId>simple-servlet</artifactId>
+  <artifactId>pipe-idt</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>simple-servlet</name>
+  <name>pipe-id</name>
   <url>http://maven.apache.org</url>
 
   <properties>
